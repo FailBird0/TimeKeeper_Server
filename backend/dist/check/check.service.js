@@ -12,43 +12,37 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserService = void 0;
+exports.CheckService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const check_entity_1 = require("./entities/check.entity");
 const typeorm_2 = require("typeorm");
-const user_entity_1 = require("./entities/user.entity");
-let UserService = class UserService {
-    constructor(userRepository) {
-        this.userRepository = userRepository;
+let CheckService = class CheckService {
+    constructor(checkRepository) {
+        this.checkRepository = checkRepository;
     }
-    async create(createUserDto) {
-        const existingUser = await this.userRepository.findOneBy({
-            hex_uid: createUserDto.hex_uid,
-        });
-        if (existingUser) {
-            throw new Error(`User with hex_uid ${createUserDto.hex_uid} already exists`);
-        }
-        const user = this.userRepository.create(createUserDto);
-        return this.userRepository.save(user);
+    create(createCheckDto) {
+        const check = new check_entity_1.Check();
+        check.user = { id: createCheckDto.user_id };
+        return this.checkRepository.save(check);
     }
     findAll() {
-        return this.userRepository.find();
+        return this.checkRepository.find();
     }
     findOne(id) {
-        return this.userRepository.findOneBy({ id });
+        return this.checkRepository.findOneBy({ id });
     }
-    update(id, updateUserDto) {
-        this.userRepository.update(id, updateUserDto);
-        return this.userRepository.findOneBy({ id });
+    update(id, updateCheckDto) {
+        return this.checkRepository.update(id, updateCheckDto);
     }
     remove(id) {
-        return this.userRepository.delete(id);
+        return this.checkRepository.delete(id);
     }
 };
-exports.UserService = UserService;
-exports.UserService = UserService = __decorate([
+exports.CheckService = CheckService;
+exports.CheckService = CheckService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __param(0, (0, typeorm_1.InjectRepository)(check_entity_1.Check)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], UserService);
-//# sourceMappingURL=user.service.js.map
+], CheckService);
+//# sourceMappingURL=check.service.js.map
