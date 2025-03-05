@@ -37,6 +37,9 @@ let UserService = class UserService {
     findOne(id) {
         return this.userRepository.findOneBy({ id });
     }
+    findOneByHexUID(hex_uid) {
+        return this.userRepository.findOneBy({ hex_uid });
+    }
     update(id, updateUserDto) {
         this.userRepository.update(id, updateUserDto);
         return this.userRepository.findOneBy({ id });

@@ -12,15 +12,17 @@ const check_service_1 = require("./check.service");
 const check_controller_1 = require("./check.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const check_entity_1 = require("./entities/check.entity");
+const user_service_1 = require("../user/user.service");
+const user_entity_1 = require("../user/entities/user.entity");
 let CheckModule = class CheckModule {
 };
 exports.CheckModule = CheckModule;
 exports.CheckModule = CheckModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([check_entity_1.Check])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([check_entity_1.Check]), typeorm_1.TypeOrmModule.forFeature([user_entity_1.User])],
         controllers: [check_controller_1.CheckController],
-        providers: [check_service_1.CheckService],
-        exports: [check_service_1.CheckService],
+        providers: [check_service_1.CheckService, user_service_1.UserService],
+        exports: [check_service_1.CheckService, user_service_1.UserService],
     })
 ], CheckModule);
 //# sourceMappingURL=check.module.js.map

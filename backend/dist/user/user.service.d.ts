@@ -8,6 +8,7 @@ export declare class UserService {
     create(createUserDto: CreateUserDto): Promise<User>;
     findAll(): Promise<User[]>;
     findOne(id: number): Promise<User>;
+    findOneByHexUID(hex_uid: string): Promise<User>;
     update(id: number, updateUserDto: UpdateUserDto): Promise<User>;
     remove(id: number): Promise<import("typeorm").DeleteResult>;
 }

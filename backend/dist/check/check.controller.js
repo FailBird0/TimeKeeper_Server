@@ -17,11 +17,27 @@ const common_1 = require("@nestjs/common");
 const check_service_1 = require("./check.service");
 const create_check_dto_1 = require("./dto/create-check.dto");
 const update_check_dto_1 = require("./dto/update-check.dto");
+const user_service_1 = require("../user/user.service");
 let CheckController = class CheckController {
-    constructor(checkService) {
+    constructor(checkService, userService) {
         this.checkService = checkService;
+        this.userService = userService;
     }
-    create(createCheckDto) {
+    async create(body) {
+        console.log(body);
+        if (!body.user_id && !body.hex_uid) {
+            throw new common_1.BadRequestException("Either user_id or hex_uid must be provided");
+        }
+        if (body.hex_uid) {
+            const user = await this.userService.findOneByHexUID(body.hex_uid);
+            if (!user) {
+                throw new common_1.BadRequestException("User not found for the provided hex_uid");
+            }
+            body.user_id = user.id;
+        }
+        const createCheckDto = new create_check_dto_1.CreateCheckDto();
+        createCheckDto.user_id = body.user_id;
+        createCheckDto.date_time = body.date_time;
         return this.checkService.create(createCheckDto);
     }
     findAll() {
@@ -42,8 +58,8 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_check_dto_1.CreateCheckDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], CheckController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
@@ -75,6 +91,6 @@ __decorate([
 ], CheckController.prototype, "remove", null);
 exports.CheckController = CheckController = __decorate([
     (0, common_1.Controller)('check'),
-    __metadata("design:paramtypes", [check_service_1.CheckService])
+    __metadata("design:paramtypes", [check_service_1.CheckService, user_service_1.UserService])
 ], CheckController);
 //# sourceMappingURL=check.controller.js.map

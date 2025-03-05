@@ -1,14 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { CheckService } from './check.service';
 import { CreateCheckDto } from './dto/create-check.dto';
 import { UpdateCheckDto } from './dto/update-check.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('check')
 export class CheckController {
-  constructor(private readonly checkService: CheckService) {}
+  constructor(private readonly checkService: CheckService, private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createCheckDto: CreateCheckDto) {
+  async create(@Body() body: {user_id?: number, hex_uid?: string, date_time?: Date}) {
+    console.log(body);
+    if (!body.user_id && !body.hex_uid) {
+      throw new BadRequestException("Either user_id or hex_uid must be provided");
+    }
+
+    if (body.hex_uid) {
+      const user = await this.userService.findOneByHexUID(body.hex_uid);
+
+      if (!user) {
+        throw new BadRequestException("User not found for the provided hex_uid")
+      }
+
+      body.user_id = user.id;
+    }
+
+    const createCheckDto = new CreateCheckDto();
+    createCheckDto.user_id = body.user_id;
+    createCheckDto.date_time = body.date_time;
+
     return this.checkService.create(createCheckDto);
   }
 

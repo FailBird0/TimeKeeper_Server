@@ -31,6 +31,10 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  findOneByHexUID(hex_uid: string) {
+    return this.userRepository.findOneBy({ hex_uid })
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     this.userRepository.update(id, updateUserDto);
     return this.userRepository.findOneBy({ id });
