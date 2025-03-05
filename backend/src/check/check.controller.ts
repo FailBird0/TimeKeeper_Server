@@ -10,12 +10,11 @@ export class CheckController {
 
   @Post()
   async create(@Body() body: {user_id?: number, hex_uid?: string, date_time?: Date}) {
-    console.log(body);
     if (!body.user_id && !body.hex_uid) {
       throw new BadRequestException("Either user_id or hex_uid must be provided");
     }
 
-    if (body.hex_uid) {
+    if (!body.user_id && body.hex_uid) {
       const user = await this.userService.findOneByHexUID(body.hex_uid);
 
       if (!user) {

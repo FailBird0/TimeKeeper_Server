@@ -24,11 +24,10 @@ let CheckController = class CheckController {
         this.userService = userService;
     }
     async create(body) {
-        console.log(body);
         if (!body.user_id && !body.hex_uid) {
             throw new common_1.BadRequestException("Either user_id or hex_uid must be provided");
         }
-        if (body.hex_uid) {
+        if (!body.user_id && body.hex_uid) {
             const user = await this.userService.findOneByHexUID(body.hex_uid);
             if (!user) {
                 throw new common_1.BadRequestException("User not found for the provided hex_uid");
