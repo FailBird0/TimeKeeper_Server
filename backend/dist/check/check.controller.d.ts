@@ -9,9 +9,49 @@ export declare class CheckController {
         user_id?: number;
         hex_uid?: string;
         date_time?: Date;
-    }): Promise<import("./entities/check.entity").Check>;
-    findAll(): Promise<import("./entities/check.entity").Check[]>;
-    findOne(id: string): Promise<import("./entities/check.entity").Check>;
-    update(id: string, updateCheckDto: UpdateCheckDto): Promise<import("typeorm").UpdateResult>;
-    remove(id: string): Promise<import("typeorm").DeleteResult>;
+    }): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/check.entity").Check;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    findAll(): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/check.entity").Check[];
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    findOne(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/check.entity").Check;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    update(id: string, updateCheckDto: UpdateCheckDto): Promise<{
+        success: boolean;
+        message: string;
+        data: import("typeorm").UpdateResult;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    remove(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: import("typeorm").DeleteResult;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
 }

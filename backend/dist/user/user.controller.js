@@ -21,20 +21,85 @@ let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
-    create(createUserDto) {
-        return this.userService.create(createUserDto);
+    async create(createUserDto) {
+        try {
+            const user = await this.userService.create(createUserDto);
+            return {
+                success: true,
+                message: "User created successfully",
+                data: user
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    findAll() {
-        return this.userService.findAll();
+    async findAll() {
+        try {
+            const users = await this.userService.findAll();
+            return {
+                success: true,
+                message: "Users found successfully",
+                data: users
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    findOne(id) {
-        return this.userService.findOne(+id);
+    async findOne(id) {
+        try {
+            const user = await this.userService.findOne(+id);
+            return {
+                success: true,
+                message: "User found successfully",
+                data: user
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    update(id, updateUserDto) {
-        return this.userService.update(+id, updateUserDto);
+    async update(id, updateUserDto) {
+        try {
+            const user = await this.userService.update(+id, updateUserDto);
+            return {
+                success: true,
+                message: "User updated successfully",
+                data: user
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    remove(id) {
-        return this.userService.remove(+id);
+    async remove(id) {
+        try {
+            const user = await this.userService.remove(+id);
+            return {
+                success: true,
+                message: "User deleted successfully",
+                data: user
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
 };
 exports.UserController = UserController;
@@ -43,20 +108,20 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
@@ -64,14 +129,14 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_user_dto_1.UpdateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "remove", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),

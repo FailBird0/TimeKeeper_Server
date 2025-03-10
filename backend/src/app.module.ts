@@ -15,7 +15,7 @@ import { CheckModule } from './check/check.module';
       port: 3306,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      database: 'timekeeper_db',
+      database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true
     }),

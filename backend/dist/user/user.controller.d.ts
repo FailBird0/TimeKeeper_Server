@@ -4,9 +4,49 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    create(createUserDto: CreateUserDto): Promise<import("./entities/user.entity").User>;
-    findAll(): Promise<import("./entities/user.entity").User[]>;
-    findOne(id: string): Promise<import("./entities/user.entity").User>;
-    update(id: string, updateUserDto: UpdateUserDto): Promise<import("./entities/user.entity").User>;
-    remove(id: string): Promise<import("typeorm").DeleteResult>;
+    create(createUserDto: CreateUserDto): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/user.entity").User;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    findAll(): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/user.entity").User[];
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    findOne(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/user.entity").User;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    update(id: string, updateUserDto: UpdateUserDto): Promise<{
+        success: boolean;
+        message: string;
+        data: import("./entities/user.entity").User;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
+    remove(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: import("typeorm").DeleteResult;
+    } | {
+        success: boolean;
+        message: any;
+        data?: undefined;
+    }>;
 }

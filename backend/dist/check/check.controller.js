@@ -37,19 +37,84 @@ let CheckController = class CheckController {
         const createCheckDto = new create_check_dto_1.CreateCheckDto();
         createCheckDto.user_id = body.user_id;
         createCheckDto.date_time = body.date_time;
-        return this.checkService.create(createCheckDto);
+        try {
+            const check = await this.checkService.create(createCheckDto);
+            return {
+                success: true,
+                message: "Check created successfully",
+                data: check
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    findAll() {
-        return this.checkService.findAll();
+    async findAll() {
+        try {
+            const checks = await this.checkService.findAll();
+            return {
+                success: true,
+                message: "Checks found successfully",
+                data: checks
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    findOne(id) {
-        return this.checkService.findOne(+id);
+    async findOne(id) {
+        try {
+            const check = await this.checkService.findOne(+id);
+            return {
+                success: true,
+                message: "Check found successfully",
+                data: check
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    update(id, updateCheckDto) {
-        return this.checkService.update(+id, updateCheckDto);
+    async update(id, updateCheckDto) {
+        try {
+            const check = await this.checkService.update(+id, updateCheckDto);
+            return {
+                success: true,
+                message: "Check updated successfully",
+                data: check
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
-    remove(id) {
-        return this.checkService.remove(+id);
+    async remove(id) {
+        try {
+            const check = await this.checkService.remove(+id);
+            return {
+                success: true,
+                message: "Check deleted successfully",
+                data: check
+            };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: error.message
+            };
+        }
     }
 };
 exports.CheckController = CheckController;
@@ -64,14 +129,14 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CheckController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CheckController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
@@ -79,14 +144,14 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_check_dto_1.UpdateCheckDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CheckController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CheckController.prototype, "remove", null);
 exports.CheckController = CheckController = __decorate([
     (0, common_1.Controller)('check'),
