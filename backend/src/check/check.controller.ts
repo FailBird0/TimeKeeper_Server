@@ -67,11 +67,18 @@ export class CheckController {
     try {
       const check = await this.checkService.findOne(+id);
 
-      return {
-        success: true,
-        message: "Check found successfully",
-        data: check
-      };
+      if (check) {
+        return {
+          success: true,
+          message: "Check found successfully",
+          data: check
+        };
+      } else {
+        return {
+          success: false,
+          message: "Check not found"
+        };
+      }
     } catch (error) {
       return {
         success: false,
@@ -85,11 +92,18 @@ export class CheckController {
     try {
       const check = await this.checkService.update(+id, updateCheckDto);
 
-      return {
-        success: true,
-        message: "Check updated successfully",
-        data: check
-      };
+      if (check) {
+        return {
+          success: true,
+          message: "Check updated successfully",
+          data: check
+        };
+      } else {
+        return {
+          success: false,
+          message: "Check not updated"
+        };
+      }
     } catch (error) {
       return {
         success: false,

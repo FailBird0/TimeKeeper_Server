@@ -56,11 +56,19 @@ let UserController = class UserController {
     async findOne(id) {
         try {
             const user = await this.userService.findOne(+id);
-            return {
-                success: true,
-                message: "User found successfully",
-                data: user
-            };
+            if (user) {
+                return {
+                    success: true,
+                    message: "User found successfully",
+                    data: user
+                };
+            }
+            else {
+                return {
+                    success: false,
+                    message: "User not found"
+                };
+            }
         }
         catch (error) {
             return {
@@ -72,11 +80,19 @@ let UserController = class UserController {
     async update(id, updateUserDto) {
         try {
             const user = await this.userService.update(+id, updateUserDto);
-            return {
-                success: true,
-                message: "User updated successfully",
-                data: user
-            };
+            if (user) {
+                return {
+                    success: true,
+                    message: "User updated successfully",
+                    data: user
+                };
+            }
+            else {
+                return {
+                    success: false,
+                    message: "User not updated"
+                };
+            }
         }
         catch (error) {
             return {

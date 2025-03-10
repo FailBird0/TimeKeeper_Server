@@ -48,11 +48,18 @@ export class UserController {
     try {
       const user = await this.userService.findOne(+id);
 
-      return {
-        success: true,
-        message: "User found successfully",
-        data: user
-      };
+      if (user) {
+        return {
+          success: true,
+          message: "User found successfully",
+          data: user
+        };
+      } else {
+        return {
+          success: false,
+          message: "User not found"
+        };
+      }
     } catch (error) {
       return {
         success: false,
@@ -66,11 +73,18 @@ export class UserController {
     try {
       const user = await this.userService.update(+id, updateUserDto);
 
-      return {
-        success: true,
-        message: "User updated successfully",
-        data: user
-      };
+      if (user) {
+        return {
+          success: true,
+          message: "User updated successfully",
+          data: user
+        };
+      } else {
+        return {
+          success: false,
+          message: "User not updated"
+        };
+      }
     } catch (error) {
       return {
         success: false,
