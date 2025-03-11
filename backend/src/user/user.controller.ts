@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,96 +18,55 @@ export class UserController {
         data: user
       };
     } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
+      throw new BadRequestException(error.message);
     }
   }
 
   @Get()
   async findAll() {
-    try {
-      const users = await this.userService.findAll();
+    const users = await this.userService.findAll();
 
-      return {
-        success: true,
-        message: "Users found successfully",
-        data: users
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
-    }
+    return {
+      success: true,
+      message: "Users found successfully",
+      data: users
+    };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      const user = await this.userService.findOne(+id);
+    const user = await this.userService.findOne(+id);
 
-      if (user) {
-        return {
-          success: true,
-          message: "User found successfully",
-          data: user
-        };
-      } else {
-        return {
-          success: false,
-          message: "User not found"
-        };
-      }
-    } catch (error) {
+    if (user) {
       return {
-        success: false,
-        message: error.message
+        success: true,
+        message: "User found successfully",
+        data: user
       };
+    } else {
+      throw new BadRequestException("User not found");
     }
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    try {
-      const user = await this.userService.update(+id, updateUserDto);
+    const user = await this.userService.update(+id, updateUserDto);
 
-      if (user) {
-        return {
-          success: true,
-          message: "User updated successfully",
-          data: user
-        };
-      } else {
-        return {
-          success: false,
-          message: "User not updated"
-        };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
-    }
+    return {
+      success: true,
+      message: "User updated successfully",
+      data: user
+    };
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      const user = await this.userService.remove(+id);
+    const user = await this.userService.remove(+id);
 
-      return {
-        success: true,
-        message: "User deleted successfully",
-        data: user
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
-    }
+    return {
+      success: true,
+      message: "User deleted successfully",
+      data: user
+    };
   }
 }

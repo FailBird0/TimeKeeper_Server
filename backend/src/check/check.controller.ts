@@ -46,87 +46,49 @@ export class CheckController {
 
   @Get()
   async findAll() {
-    try {
-      const checks = await this.checkService.findAll();
+    const checks = await this.checkService.findAll();
 
-      return {
-        success: true,
-        message: "Checks found successfully",
-        data: checks
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
-    }
+    return {
+      success: true,
+      message: "Checks found successfully",
+      data: checks
+    };
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      const check = await this.checkService.findOne(+id);
+    const check = await this.checkService.findOne(+id);
 
-      if (check) {
-        return {
-          success: true,
-          message: "Check found successfully",
-          data: check
-        };
-      } else {
-        return {
-          success: false,
-          message: "Check not found"
-        };
-      }
-    } catch (error) {
+    if (check) {
       return {
-        success: false,
-        message: error.message
+        success: true,
+        message: "Check found successfully",
+        data: check
       };
+    } else {
+      throw new BadRequestException("Check not found");
     }
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateCheckDto: UpdateCheckDto) {
-    try {
-      const check = await this.checkService.update(+id, updateCheckDto);
+    const check = await this.checkService.update(+id, updateCheckDto);
 
-      if (check) {
-        return {
-          success: true,
-          message: "Check updated successfully",
-          data: check
-        };
-      } else {
-        return {
-          success: false,
-          message: "Check not updated"
-        };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
-    }
+    return {
+      success: true,
+      message: "Check updated successfully",
+      data: check
+    };
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      const check = await this.checkService.remove(+id);
+    const check = await this.checkService.remove(+id);
 
-      return {
-        success: true,
-        message: "Check deleted successfully",
-        data: check
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message
-      };
-    }
+    return {
+      success: true,
+      message: "Check deleted successfully",
+      data: check
+    };
   }
 }

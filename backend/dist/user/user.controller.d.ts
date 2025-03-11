@@ -8,45 +8,25 @@ export declare class UserController {
         success: boolean;
         message: string;
         data: import("./entities/user.entity").User;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     findAll(): Promise<{
         success: boolean;
         message: string;
         data: import("./entities/user.entity").User[];
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     findOne(id: string): Promise<{
         success: boolean;
         message: string;
         data: import("./entities/user.entity").User;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     update(id: string, updateUserDto: UpdateUserDto): Promise<{
         success: boolean;
         message: string;
         data: import("./entities/user.entity").User;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     remove(id: string): Promise<{
         success: boolean;
         message: string;
         data: import("typeorm").DeleteResult;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
 }

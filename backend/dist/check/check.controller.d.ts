@@ -22,36 +22,20 @@ export declare class CheckController {
         success: boolean;
         message: string;
         data: import("./entities/check.entity").Check[];
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     findOne(id: string): Promise<{
         success: boolean;
         message: string;
         data: import("./entities/check.entity").Check;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     update(id: string, updateCheckDto: UpdateCheckDto): Promise<{
         success: boolean;
         message: string;
         data: import("typeorm").UpdateResult;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
     remove(id: string): Promise<{
         success: boolean;
         message: string;
         data: import("typeorm").DeleteResult;
-    } | {
-        success: boolean;
-        message: any;
-        data?: undefined;
     }>;
 }

@@ -31,91 +31,45 @@ let UserController = class UserController {
             };
         }
         catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async findAll() {
-        try {
-            const users = await this.userService.findAll();
-            return {
-                success: true,
-                message: "Users found successfully",
-                data: users
-            };
-        }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
-        }
+        const users = await this.userService.findAll();
+        return {
+            success: true,
+            message: "Users found successfully",
+            data: users
+        };
     }
     async findOne(id) {
-        try {
-            const user = await this.userService.findOne(+id);
-            if (user) {
-                return {
-                    success: true,
-                    message: "User found successfully",
-                    data: user
-                };
-            }
-            else {
-                return {
-                    success: false,
-                    message: "User not found"
-                };
-            }
-        }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
-        }
-    }
-    async update(id, updateUserDto) {
-        try {
-            const user = await this.userService.update(+id, updateUserDto);
-            if (user) {
-                return {
-                    success: true,
-                    message: "User updated successfully",
-                    data: user
-                };
-            }
-            else {
-                return {
-                    success: false,
-                    message: "User not updated"
-                };
-            }
-        }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
-        }
-    }
-    async remove(id) {
-        try {
-            const user = await this.userService.remove(+id);
+        const user = await this.userService.findOne(+id);
+        if (user) {
             return {
                 success: true,
-                message: "User deleted successfully",
+                message: "User found successfully",
                 data: user
             };
         }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
+        else {
+            throw new common_1.BadRequestException("User not found");
         }
+    }
+    async update(id, updateUserDto) {
+        const user = await this.userService.update(+id, updateUserDto);
+        return {
+            success: true,
+            message: "User updated successfully",
+            data: user
+        };
+    }
+    async remove(id) {
+        const user = await this.userService.remove(+id);
+        return {
+            success: true,
+            message: "User deleted successfully",
+            data: user
+        };
     }
 };
 exports.UserController = UserController;

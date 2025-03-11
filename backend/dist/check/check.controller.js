@@ -53,84 +53,41 @@ let CheckController = class CheckController {
         }
     }
     async findAll() {
-        try {
-            const checks = await this.checkService.findAll();
-            return {
-                success: true,
-                message: "Checks found successfully",
-                data: checks
-            };
-        }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
-        }
+        const checks = await this.checkService.findAll();
+        return {
+            success: true,
+            message: "Checks found successfully",
+            data: checks
+        };
     }
     async findOne(id) {
-        try {
-            const check = await this.checkService.findOne(+id);
-            if (check) {
-                return {
-                    success: true,
-                    message: "Check found successfully",
-                    data: check
-                };
-            }
-            else {
-                return {
-                    success: false,
-                    message: "Check not found"
-                };
-            }
-        }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
-        }
-    }
-    async update(id, updateCheckDto) {
-        try {
-            const check = await this.checkService.update(+id, updateCheckDto);
-            if (check) {
-                return {
-                    success: true,
-                    message: "Check updated successfully",
-                    data: check
-                };
-            }
-            else {
-                return {
-                    success: false,
-                    message: "Check not updated"
-                };
-            }
-        }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
-        }
-    }
-    async remove(id) {
-        try {
-            const check = await this.checkService.remove(+id);
+        const check = await this.checkService.findOne(+id);
+        if (check) {
             return {
                 success: true,
-                message: "Check deleted successfully",
+                message: "Check found successfully",
                 data: check
             };
         }
-        catch (error) {
-            return {
-                success: false,
-                message: error.message
-            };
+        else {
+            throw new common_1.BadRequestException("Check not found");
         }
+    }
+    async update(id, updateCheckDto) {
+        const check = await this.checkService.update(+id, updateCheckDto);
+        return {
+            success: true,
+            message: "Check updated successfully",
+            data: check
+        };
+    }
+    async remove(id) {
+        const check = await this.checkService.remove(+id);
+        return {
+            success: true,
+            message: "Check deleted successfully",
+            data: check
+        };
     }
 };
 exports.CheckController = CheckController;
