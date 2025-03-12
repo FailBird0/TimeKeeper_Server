@@ -25,7 +25,10 @@ export class CheckService {
   }
 
   findOne(id: number) {
-    return this.checkRepository.findOneBy({ id });
+    return this.checkRepository.findOne({
+      where: { id },
+      relations: ["user"]
+    });
   }
 
   update(id: number, updateCheckDto: UpdateCheckDto) {

@@ -39,10 +39,11 @@ let CheckController = class CheckController {
         createCheckDto.date_time = body.date_time;
         try {
             const check = await this.checkService.create(createCheckDto);
+            const checkWithUser = await this.checkService.findOne(check.id);
             return {
                 success: true,
                 message: "Check created successfully",
-                data: check
+                data: checkWithUser
             };
         }
         catch (error) {

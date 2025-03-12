@@ -1,5 +1,11 @@
 import "./style.css";
 
+type User = {
+  id: number,
+  hex_uid: string,
+  name: string
+};
+
 const buildUserForm = () => {
   const form = document.getElementById("form__user")!;
 
@@ -46,8 +52,6 @@ const buildUserForm = () => {
 async function submitForm(formData: FormData) {
   const ip = import.meta.env.VITE_SERVER_IP + import.meta.env.VITE_SERVER_PORT + "/user";
 
-  console.log(ip);
-
   const config = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -57,9 +61,35 @@ async function submitForm(formData: FormData) {
   const response = await fetch(ip, config);
   const json = await response.json();
 
-  console.log(json);
-
   createToast(json.success, json.message, json.statusCode);
+}
+
+async function getUsers() {
+  const users: User[] = await fetchGet("/user");
+
+  return users;
+}
+console.log(await getUsers());
+
+async function getChecks() {
+  const users: User[] = await fetchGet("/check");
+
+  return users;
+}
+console.log(await getUsers());
+
+async function fetchGet(query: string) {
+  const ip = import.meta.env.VITE_SERVER_IP + import.meta.env.VITE_SERVER_PORT + query;
+
+  const config = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" }
+  };
+
+  const response = await fetch(ip, config);
+  const json = await response.json();
+
+  return json;
 }
 
 function createToast(ok: boolean, message: string, statusCode: number) {

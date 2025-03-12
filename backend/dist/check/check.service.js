@@ -30,7 +30,10 @@ let CheckService = class CheckService {
         return this.checkRepository.find();
     }
     findOne(id) {
-        return this.checkRepository.findOneBy({ id });
+        return this.checkRepository.findOne({
+            where: { id },
+            relations: ["user"]
+        });
     }
     update(id, updateCheckDto) {
         return this.checkRepository.update(id, updateCheckDto);

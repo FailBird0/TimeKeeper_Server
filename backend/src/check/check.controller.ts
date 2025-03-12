@@ -31,10 +31,12 @@ export class CheckController {
     try {
       const check = await this.checkService.create(createCheckDto);
 
+      const checkWithUser = await this.checkService.findOne(check.id);
+
       return {
         success: true,
         message: "Check created successfully",
-        data: check
+        data: checkWithUser
       };
     } catch (error) {
       return {
