@@ -6,8 +6,14 @@ type User = {
   name: string
 };
 
-const buildUserForm = () => {
-  const form = document.getElementById("form__user")!;
+type Check = {
+  id: number,
+  date_time: Date,
+  user: User
+};
+
+function buildUserForm() {
+  const form = document.getElementById("form__user") as HTMLFormElement;
 
   form.innerHTML = /* html */`
     <fieldset>
@@ -40,12 +46,16 @@ const buildUserForm = () => {
   });
 
   // actual submit logic
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     console.log(Object.fromEntries(formData));
 
-    submitForm(formData);
+    const success = await submitForm(formData);
+
+    if (success) {
+      buildUserTable();
+    }
   });
 };
 
@@ -61,22 +71,79 @@ async function submitForm(formData: FormData) {
   const response = await fetch(ip, config);
   const json = await response.json();
 
-  createToast(json.success, json.message, json.statusCode);
+  createToast(json.success, json.message, response.status);
+
+  return json.success as boolean;
 }
 
-async function getUsers() {
-  const users: User[] = await fetchGet("/user");
+async function buildUserTable() {
+  const table = document.getElementById("user-table") as HTMLTableElement;
+  table.innerHTML = "";
+  const users = await getUsers();
 
-  return users;
+  const headRow = table.insertRow();
+  const headCellID      = headRow.insertCell();
+  const headCellHexUID  = headRow.insertCell();
+  const headCellName    = headRow.insertCell();
+
+  headCellID.innerText      = "ID";
+  headCellHexUID.innerText  = "Hex UID";
+  headCellName.innerText    = "Name";
+
+  for (const user of users) {
+    const row = table.insertRow();
+    const cellID      = row.insertCell();
+    const cellHexUID  = row.insertCell();
+    const cellName    = row.insertCell();
+
+    cellID.innerText      = `#${user.id}`;
+    cellHexUID.innerText  = `${user.hex_uid}`;
+    cellName.innerText    = `${user.name}`;
+  }
 }
-console.log(await getUsers());
+buildUserTable();
 
-async function getChecks() {
-  const users: User[] = await fetchGet("/check");
+async function buildCheckTable() {
+  const table = document.getElementById("check-table") as HTMLTableElement;
+  table.innerHTML = "";
+  const checks = await getChecks();
 
-  return users;
+  const headRow = table.insertRow();
+  const headCellID    = headRow.insertCell();
+  const headCellDate  = headRow.insertCell();
+  const headCellUser  = headRow.insertCell();
+
+  headCellID.innerText    = "ID";
+  headCellDate.innerText  = "Date ";
+  headCellUser.innerText  = "User name (ID)";
+
+  for (let i = checks.length - 1; i >= 0; i--) {
+    const check = checks[i];
+    const row = table.insertRow();
+    const cellID    = row.insertCell();
+    const cellDate  = row.insertCell();
+    const cellUser  = row.insertCell();
+
+    const date = new Date(check.date_time).toISOString().slice(0, 19).replace("T", " ");
+
+    cellID.innerText    = `#${check.id}`;
+    cellDate.innerText  = `${date} UTC`;
+    cellUser.innerText  = `${check.user.name} (#${check.user.id})`;
+  }
 }
-console.log(await getUsers());
+buildCheckTable();
+
+async function getUsers(): Promise<User[]> {
+  const res = await fetchGet("/user");
+
+  return res.data;
+}
+
+async function getChecks(): Promise<Check[]> {
+  const res = await fetchGet("/check");
+
+  return res.data;
+}
 
 async function fetchGet(query: string) {
   const ip = import.meta.env.VITE_SERVER_IP + import.meta.env.VITE_SERVER_PORT + query;

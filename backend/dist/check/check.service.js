@@ -27,7 +27,9 @@ let CheckService = class CheckService {
         return this.checkRepository.save(check);
     }
     findAll() {
-        return this.checkRepository.find();
+        return this.checkRepository.find({
+            relations: ["user"]
+        });
     }
     findOne(id) {
         return this.checkRepository.findOne({

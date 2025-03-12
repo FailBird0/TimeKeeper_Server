@@ -21,7 +21,9 @@ export class CheckService {
   }
 
   findAll() {
-    return this.checkRepository.find();
+    return this.checkRepository.find({
+      relations: ["user"]
+    });
   }
 
   findOne(id: number) {
