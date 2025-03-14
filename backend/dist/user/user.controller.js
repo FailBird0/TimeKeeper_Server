@@ -42,6 +42,14 @@ let UserController = class UserController {
             data: users
         };
     }
+    async findRange(skip, take) {
+        const users = await this.userService.findRange(skip, take);
+        return {
+            success: true,
+            message: "Users found successfully",
+            data: users
+        };
+    }
     async findOne(id) {
         const user = await this.userService.findOne(+id);
         if (user) {
@@ -86,6 +94,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('range'),
+    __param(0, (0, common_1.Query)('skip')),
+    __param(1, (0, common_1.Query)('take')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "findRange", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

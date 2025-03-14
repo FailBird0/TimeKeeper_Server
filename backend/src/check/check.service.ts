@@ -26,6 +26,13 @@ export class CheckService {
     });
   }
 
+  findRange(skip: number, take: number) {
+    return this.checkRepository.find({
+      skip,
+      take
+    });
+  }
+
   findOne(id: number) {
     return this.checkRepository.findOne({
       where: { id },

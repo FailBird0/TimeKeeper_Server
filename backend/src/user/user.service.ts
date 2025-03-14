@@ -27,6 +27,13 @@ export class UserService {
     return this.userRepository.find();
   }
 
+  findRange(skip: number, take: number) {
+    return this.userRepository.find({
+      skip,
+      take
+    });
+  }
+
   findOne(id: number) {
     return this.userRepository.findOneBy({ id });
   }

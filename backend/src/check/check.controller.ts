@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Query } from '@nestjs/common';
 import { CheckService } from './check.service';
 import { CreateCheckDto } from './dto/create-check.dto';
 import { UpdateCheckDto } from './dto/update-check.dto';
@@ -49,6 +49,20 @@ export class CheckController {
   @Get()
   async findAll() {
     const checks = await this.checkService.findAll();
+
+    return {
+      success: true,
+      message: "Checks found successfully",
+      data: checks
+    };
+  }
+  
+  @Get('range')
+  async findRange(
+    @Query('skip') skip: number,
+    @Query('take') take: number
+  ) {
+    const checks = await this.checkService.findRange(skip, take);
 
     return {
       success: true,

@@ -34,6 +34,12 @@ let UserService = class UserService {
     findAll() {
         return this.userRepository.find();
     }
+    findRange(skip, take) {
+        return this.userRepository.find({
+            skip,
+            take
+        });
+    }
     findOne(id) {
         return this.userRepository.findOneBy({ id });
     }

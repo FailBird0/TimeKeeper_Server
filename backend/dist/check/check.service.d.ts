@@ -7,6 +7,7 @@ export declare class CheckService {
     constructor(checkRepository: Repository<Check>);
     create(createCheckDto: CreateCheckDto): Promise<Check>;
     findAll(): Promise<Check[]>;
+    findRange(skip: number, take: number): Promise<Check[]>;
     findOne(id: number): Promise<Check>;
     update(id: number, updateCheckDto: UpdateCheckDto): Promise<import("typeorm").UpdateResult>;
     remove(id: number): Promise<import("typeorm").DeleteResult>;

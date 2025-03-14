@@ -7,6 +7,7 @@ export declare class UserService {
     constructor(userRepository: Repository<User>);
     create(createUserDto: CreateUserDto): Promise<User>;
     findAll(): Promise<User[]>;
+    findRange(skip: number, take: number): Promise<User[]>;
     findOne(id: number): Promise<User>;
     findOneByHexUID(hex_uid: string): Promise<User>;
     update(id: number, updateUserDto: UpdateUserDto): Promise<User>;
