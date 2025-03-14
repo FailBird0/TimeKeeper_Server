@@ -29,7 +29,8 @@ export class CheckService {
   findRange(skip: number, take: number) {
     return this.checkRepository.find({
       skip,
-      take
+      take,
+      relations: ["user"]
     });
   }
 

@@ -34,7 +34,8 @@ let CheckService = class CheckService {
     findRange(skip, take) {
         return this.checkRepository.find({
             skip,
-            take
+            take,
+            relations: ["user"]
         });
     }
     findOne(id) {
