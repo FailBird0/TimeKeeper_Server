@@ -12,69 +12,193 @@ type Check = {
   user: User
 };
 
-function buildUserForm() {
-  const form = document.getElementById("form__user") as HTMLFormElement;
+class UserForm {
+  apiURL: string;
+  formCreate: HTMLFormElement;
+  formUpdate: HTMLFormElement;
 
-  form.innerHTML = /* html */`
-    <fieldset>
-      <legend>Add a new User</legend>
+  constructor(
+    apiURL: string,
+    formCreate: HTMLFormElement,
+    formUpdate: HTMLFormElement
+  ) {
+    this.apiURL = apiURL;
+    this.formCreate = formCreate;
+    this.formUpdate = formUpdate;
 
-      <div>
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" maxlength="255" required>
-        <span class="form__input-length"></span>
-      </div>
-      <div>
-        <label for="hex_uid">Hex UID</label>
-        <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
-        <span class="form__input-length"></span>
-      </div>
+    this.init();
+  }
+  init() {
+    this.formCreate.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const response = await this.submit(this.formCreate, "POST");
 
-      <button type="submit">Submit</button>
-    </fieldset>
-  `;
+      if (response.ok) {
+        this.formCreate.reset();
+      } else {
+        const json = await response.json();
 
-  // form input length indicators (0/255)
-  const formInputLengths = form.querySelectorAll(".form__input-length");
-  formInputLengths.forEach((inputLength) => {
-    const inputElement = inputLength.previousElementSibling as HTMLInputElement;
-
-    inputLength.textContent = `${inputElement.value.length}/${inputElement.getAttribute("maxlength")}`;
-    inputElement.addEventListener("input", () => {
-      inputLength.textContent = `${inputElement.value.length}/${inputElement.getAttribute("maxlength")}`;
+        createToast(json.success, json.message, response.status);
+      }
     });
-  });
 
-  // actual submit logic
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
-    console.log(Object.fromEntries(formData));
+    this.formUpdate.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const response = await this.submit(this.formUpdate, "PATCH");
 
-    const success = await submitForm(formData);
+      if (response.ok) {
+        this.formUpdate.reset();
+        this.doCreate();
+      } else {
+        const json = await response.json();
 
-    if (success) {
-      buildUserTable();
-    }
-  });
-};
+        console.log(json);
 
-async function submitForm(formData: FormData) {
-  const ip = import.meta.env.VITE_SERVER_IP + import.meta.env.VITE_SERVER_PORT + "/user";
+        createToast(json.success, json.message, response.status);
+      }
+    });
 
-  const config = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(Object.fromEntries(formData))
-  };
+    // form input length indicators (0/255)
+    const formInputLengths = this.formCreate.querySelectorAll(".form__input-length");
+    formInputLengths.forEach((inputLength) => {
+      const inputElement = inputLength.previousElementSibling as HTMLInputElement;
 
-  const response = await fetch(ip, config);
-  const json = await response.json();
+      inputLength.textContent = `${inputElement.value.length}/${inputElement.getAttribute("maxlength")}`;
+      inputElement.addEventListener("input", () => {
+        inputLength.textContent = `${inputElement.value.length}/${inputElement.getAttribute("maxlength")}`;
+      });
+    });
 
-  createToast(json.success, json.message, response.status);
+    this.doCreate();
+  }
+  doCreate() {
+    this.formUpdate.style.display = "none";
+    this.formCreate.style.display = "block";
+  }
+  doUpdate(currentUser: User) {
+    this.formCreate.style.display = "none";
+    this.formUpdate.style.display = "block";
 
-  return json.success as boolean;
+    const idElement = this.formUpdate.elements.namedItem("id") as HTMLInputElement;
+    const nameElement = this.formUpdate.elements.namedItem("name") as HTMLInputElement;
+    const hex_uidElement = this.formUpdate.elements.namedItem("hex_uid") as HTMLInputElement;
+
+    idElement.value = currentUser.id.toString();
+    nameElement.value = currentUser.name;
+    hex_uidElement.value = currentUser.hex_uid;
+  }
+  async submit(form: HTMLFormElement, method: "POST" | "PATCH") {
+    const formData = new FormData(form);
+
+    const response = await fetch(this.apiURL, {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(formData))
+    });
+
+    return response;
+  }
 }
+
+class CheckForm {
+  apiURL: string;
+  formCreate: HTMLFormElement;
+  formUpdate: HTMLFormElement;
+
+  constructor(
+    apiURL: string,
+    formCreate: HTMLFormElement,
+    formUpdate: HTMLFormElement
+  ) {
+    this.apiURL = apiURL;
+    this.formCreate = formCreate;
+    this.formUpdate = formUpdate;
+
+    this.init();
+  }
+  init() {
+    this.formCreate.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const response = await this.submit(this.formCreate, "POST");
+
+      if (response.ok) {
+        this.formCreate.reset();
+      } else {
+        const json = await response.json();
+
+        createToast(json.success, json.message, response.status);
+      }
+    });
+
+    this.formUpdate.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const response = await this.submit(this.formUpdate, "PATCH");
+
+      if (response.ok) {
+        this.formUpdate.reset();
+        this.doCreate();
+      } else {
+        const json = await response.json();
+
+        console.log(json);
+
+        createToast(json.success, json.message, response.status);
+      }
+    });
+
+    // form input length indicators (0/255)
+    const formInputLengths = this.formCreate.querySelectorAll(".form__input-length");
+    formInputLengths.forEach((inputLength) => {
+      const inputElement = inputLength.previousElementSibling as HTMLInputElement;
+
+      inputLength.textContent = `${inputElement.value.length}/${inputElement.getAttribute("maxlength")}`;
+      inputElement.addEventListener("input", () => {
+        inputLength.textContent = `${inputElement.value.length}/${inputElement.getAttribute("maxlength")}`;
+      });
+    });
+
+    this.doCreate();
+  }
+  doCreate() {
+    this.formUpdate.style.display = "none";
+    this.formCreate.style.display = "block";
+  }
+  doUpdate(currentUser: User) {
+    this.formCreate.style.display = "none";
+    this.formUpdate.style.display = "block";
+
+    const idElement = this.formUpdate.elements.namedItem("id") as HTMLInputElement;
+    const hex_uidElement = this.formUpdate.elements.namedItem("hex_uid") as HTMLInputElement;
+    const date_timeElement = this.formUpdate.elements.namedItem("date_time") as HTMLInputElement;
+
+    idElement.value = currentUser.id.toString();
+    hex_uidElement.value = currentUser.hex_uid;
+    date_timeElement.value = new Date().toISOString();
+  }
+  async submit(form: HTMLFormElement, method: "POST" | "PATCH") {
+    const formData = new FormData(form);
+
+    const response = await fetch(this.apiURL, {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.fromEntries(formData))
+    });
+
+    return response;
+  }
+}
+
+const userForm = new UserForm(
+  import.meta.env.VITE_SERVER_IP + import.meta.env.VITE_SERVER_PORT + "/user",
+  document.getElementById("form__user__create") as HTMLFormElement,
+  document.getElementById("form__user__update") as HTMLFormElement
+);
+
+const checkForm = new CheckForm(
+  import.meta.env.VITE_SERVER_IP + import.meta.env.VITE_SERVER_PORT + "/check",
+  document.getElementById("form__check__create") as HTMLFormElement,
+  document.getElementById("form__check__update") as HTMLFormElement
+);
 
 async function buildUserTable() {
   const table = document.getElementById("user-table") as HTMLTableElement;
@@ -202,5 +326,3 @@ function createToast(ok: boolean, message: string, statusCode: number) {
     catch (error) { /* Do nothing */ }
   }, 5000);
 }
-
-buildUserForm();

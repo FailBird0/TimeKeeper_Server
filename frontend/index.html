@@ -9,7 +9,86 @@
     <div id="app">
       <h1>TimeKeeper</h1>
 
-      <form id="form__user"></form>
+      <div id="form-container">
+        <div id="form-container__user">
+          <form id="form__user__create">
+            <fieldset>
+              <legend>Add a new User</legend>
+        
+              <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+          <form id="form__user__update">
+            <fieldset>
+              <legend>Update User</legend>
+  
+              <div>
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" disabled>
+              </div>
+              <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+        </div>
+        <div id="form-container__check">
+          <form id="form__check__create">
+            <fieldset>
+              <legend>Add a new Check-in / Check-out</legend>
+        
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+          <form id="form__check__update">
+            <fieldset>
+              <legend>Update Check-in / Check-out</legend>
+        
+              <div>
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" disabled>
+              </div>
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+              <div>
+                <label for="date_time">Date & Time</label>
+                <input type="datetime-local" id="date_time" name="date_time" required>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
 
       <section>
         <h2>Users</h2>
