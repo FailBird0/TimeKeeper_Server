@@ -14,6 +14,14 @@ export declare class UserController {
         message: string;
         data: import("./entities/user.entity").User[];
     }>;
+    findRange(skip: number, take: number): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            users: import("./entities/user.entity").User[];
+            count: number;
+        };
+    }>;
     findOne(id: string): Promise<{
         success: boolean;
         message: string;

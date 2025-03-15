@@ -34,11 +34,20 @@ let UserService = class UserService {
     findAll() {
         return this.userRepository.find();
     }
+    findRange(skip, take) {
+        return this.userRepository.find({
+            skip,
+            take
+        });
+    }
     findOne(id) {
         return this.userRepository.findOneBy({ id });
     }
     findOneByHexUID(hex_uid) {
         return this.userRepository.findOneBy({ hex_uid });
+    }
+    count() {
+        return this.userRepository.count();
     }
     update(id, updateUserDto) {
         this.userRepository.update(id, updateUserDto);

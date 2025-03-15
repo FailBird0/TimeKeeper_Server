@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -30,6 +30,24 @@ export class UserController {
       success: true,
       message: "Users found successfully",
       data: users
+    };
+  }
+
+  @Get('range')
+  async findRange(
+    @Query('skip') skip: number,
+    @Query('take') take: number
+  ) {
+    const users = await this.userService.findRange(skip, take);
+    const count = await this.userService.count();
+
+    return {
+      success: true,
+      message: "Users found successfully",
+      data: {
+        users,
+        count
+      }
     };
   }
 

@@ -26,11 +26,23 @@ export class CheckService {
     });
   }
 
+  findRange(skip: number, take: number) {
+    return this.checkRepository.find({
+      skip,
+      take,
+      relations: ["user"]
+    });
+  }
+
   findOne(id: number) {
     return this.checkRepository.findOne({
       where: { id },
       relations: ["user"]
     });
+  }
+
+  count() {
+    return this.checkRepository.count();
   }
 
   update(id: number, updateCheckDto: UpdateCheckDto) {

@@ -61,6 +61,18 @@ let CheckController = class CheckController {
             data: checks
         };
     }
+    async findRange(skip, take) {
+        const checks = await this.checkService.findRange(skip, take);
+        const count = await this.checkService.count();
+        return {
+            success: true,
+            message: "Checks found successfully",
+            data: {
+                checks,
+                count
+            }
+        };
+    }
     async findOne(id) {
         const check = await this.checkService.findOne(+id);
         if (check) {
@@ -105,6 +117,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], CheckController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('range'),
+    __param(0, (0, common_1.Query)('skip')),
+    __param(1, (0, common_1.Query)('take')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], CheckController.prototype, "findRange", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

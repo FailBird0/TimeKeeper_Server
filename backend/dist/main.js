@@ -13,12 +13,29 @@ async function bootstrap() {
         httpsOptions
     });
     app.enableCors({
-        origin: ["http://localhost:5173", "https://localhost:5173", /^https?:\/\/192\.168\.1\.\d+$/],
+        origin: (origin, callback) => {
+            const allowedOrigins = [
+                "https://localhost:5173",
+                /https:\/\/192\.168\.\d+\.\d+:\d+/
+            ];
+            const isAllowed = allowedOrigins.some((allowedOrigin) => {
+                if (typeof allowedOrigin === "string") {
+                    return allowedOrigin === origin;
+                }
+                return allowedOrigin.test(origin);
+            });
+            if (isAllowed) {
+                callback(null, true);
+            }
+            else {
+                callback(new Error("Not allowed by CORS: " + origin));
+            }
+        },
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true
     });
-    await app.listen(process.env.PORT ?? 3000);
+    await app.listen(process.env.PORT ?? 3000, "0.0.0.0");
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

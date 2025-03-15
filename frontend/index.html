@@ -9,17 +9,132 @@
     <div id="app">
       <h1>TimeKeeper</h1>
 
-      <form id="form__user"></form>
+      <div id="form-container">
+        <div id="form-container__user">
+          <form id="form__user__create">
+            <fieldset>
+              <legend>Add a new User</legend>
+        
+              <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+          <form id="form__user__update">
+            <fieldset>
+              <legend>Update User</legend>
+  
+              <div>
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" disabled>
+              </div>
+              <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+        </div>
+        <div id="form-container__check">
+          <form id="form__check__create">
+            <fieldset>
+              <legend>Add a new Check-in / Check-out</legend>
+        
+              <div>
+                <label for="hex_uid">Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+          <form id="form__check__update">
+            <fieldset>
+              <legend>Update Check-in / Check-out</legend>
+        
+              <div>
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id" disabled>
+              </div>
+              <div>
+                <label for="hex_uid">User Hex UID</label>
+                <input type="text" id="hex_uid" name="hex_uid" pattern="[a-fA-F0-9]+" maxlength="255" required>
+                <span class="form__input-length"></span>
+              </div>
+              <div>
+                <label for="date_time">Date & Time</label>
+                <input type="datetime-local" id="date_time" name="date_time" required>
+              </div>
+        
+              <button type="submit">Submit</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
 
-      <section>
-        <h2>Users</h2>
-        <table id="user-table"></table>
-      </section>
+      <div class="table-container" id="table-container__user">
+        <div class="table__header">
+          <span class="table__title">Users</span>
+          <div>
+            Entries per page:
+            <select class="table__entries-per-page">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            <span class="table__pages">0 - 0 of 0</span>
+            <button class="table__first" title="First">«</button>
+            <button class="table__prev" title="Previous">&lt;</button>
+            <button class="table__next" title="Next">&gt;</button>
+            <button class="table__last" title="Last">»</button>
+            <button class="table__refresh" title="Refresh Table">&#8635;</button>
+          </div>
+        </div>
+        <table></table>
+      </div>
 
-      <section>
-        <h2>Check-ins & Check-outs</h2>
-        <table id="check-table"></table>
-      </section>
+      <div class="table-container" id="table-container__check">
+        <div class="table__header">
+          <span class="table__title">Check-ins & Check-outs</span>
+          <div>
+            Entries per page:
+            <select class="table__entries-per-page">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+            <span class="table__pages">0 - 0 of 0</span>
+            <button class="table__first" title="First">«</button>
+            <button class="table__prev" title="Previous">&lt;</button>
+            <button class="table__next" title="Next">&gt;</button>
+            <button class="table__last" title="Last">»</button>
+            <button class="table__refresh" title="Refresh Table">&#8635;</button>
+          </div>
+        </div>
+        <table></table>
+      </div>
+
+      <div id="toast-container"></div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

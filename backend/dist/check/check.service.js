@@ -31,11 +31,21 @@ let CheckService = class CheckService {
             relations: ["user"]
         });
     }
+    findRange(skip, take) {
+        return this.checkRepository.find({
+            skip,
+            take,
+            relations: ["user"]
+        });
+    }
     findOne(id) {
         return this.checkRepository.findOne({
             where: { id },
             relations: ["user"]
         });
+    }
+    count() {
+        return this.checkRepository.count();
     }
     update(id, updateCheckDto) {
         return this.checkRepository.update(id, updateCheckDto);
