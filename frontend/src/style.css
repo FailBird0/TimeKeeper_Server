@@ -8,12 +8,15 @@ select, button {
   background-color: transparent;
   border: 1px solid #c0c0c0;
   border-radius: 4px;
-  font-family: Courier;
+  font-family: var(--ff-mono);
   cursor: pointer;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --ff-mono: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  --ff-normal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  font-family: var(--ff-normal);
   margin-bottom: 50vh;
 }
 
@@ -111,8 +114,7 @@ fieldset div {
 .table-container {
   margin-top: 3rem;
   margin-bottom: 2rem;
-  font-family: monospace;
-  font-size: 120%;
+  font-family: var(--ff-mono);
   display: flex;
   flex-direction: column;
 }
@@ -163,11 +165,11 @@ table td, table th {
 }
 
 table td:nth-of-type(1) {
-  width: 8ch;
+  width: 6ch;
 }
 
 table td:nth-of-type(2) {
-  width: 32ch;
+  width: 28ch;
 }
 
 table td:nth-of-type(4) {
