@@ -63,11 +63,15 @@ export class CheckController {
     @Query('take') take: number
   ) {
     const checks = await this.checkService.findRange(skip, take);
+    const count = await this.checkService.count();
 
     return {
       success: true,
       message: "Checks found successfully",
-      data: checks
+      data: {
+        checks,
+        count
+      }
     };
   }
 

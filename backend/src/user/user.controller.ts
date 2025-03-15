@@ -39,11 +39,15 @@ export class UserController {
     @Query('take') take: number
   ) {
     const users = await this.userService.findRange(skip, take);
+    const count = await this.userService.count();
 
     return {
       success: true,
       message: "Users found successfully",
-      data: users
+      data: {
+        users,
+        count
+      }
     };
   }
 

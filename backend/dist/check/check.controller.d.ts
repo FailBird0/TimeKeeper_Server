@@ -26,7 +26,10 @@ export declare class CheckController {
     findRange(skip: number, take: number): Promise<{
         success: boolean;
         message: string;
-        data: import("./entities/check.entity").Check[];
+        data: {
+            checks: import("./entities/check.entity").Check[];
+            count: number;
+        };
     }>;
     findOne(id: string): Promise<{
         success: boolean;

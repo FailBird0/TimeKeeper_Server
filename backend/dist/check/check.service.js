@@ -44,6 +44,9 @@ let CheckService = class CheckService {
             relations: ["user"]
         });
     }
+    count() {
+        return this.checkRepository.count();
+    }
     update(id, updateCheckDto) {
         return this.checkRepository.update(id, updateCheckDto);
     }

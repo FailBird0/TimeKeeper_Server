@@ -42,6 +42,10 @@ export class UserService {
     return this.userRepository.findOneBy({ hex_uid })
   }
 
+  count() {
+    return this.userRepository.count();
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     this.userRepository.update(id, updateUserDto);
     return this.userRepository.findOneBy({ id });

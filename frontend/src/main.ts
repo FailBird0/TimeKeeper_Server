@@ -19,7 +19,6 @@ const api = {
       };
     }
 
-    console.log(method, url);
     const response = await fetch(url, config);
     return response;
   }
@@ -205,57 +204,129 @@ const checkForm = new CheckForm(
   document.getElementById("form__check__update") as HTMLFormElement
 );
 
-async function loadUserList(skip: number, take: number) {
-  const response = await api.request("GET", `/user/range?skip=${skip}&take=${take}`);
-  const json = await response.json();
-  const users = json.data as User[];
-  
-  const tableContainer = document.getElementById("table-container__user")!;
-  const tableElement = tableContainer.querySelector("table")!;
+const userList = {
+  tableContainer: document.getElementById("table-container__user")!,
+  skip: 0,
+  take: 5,
 
-  tableElement.innerHTML = `
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Hex UID</th>
-    </tr>
-    ${users.map(user => `
+  get takeElement() {
+    return this.tableContainer.querySelector(".table__entries-per-page")!;
+  },
+  get pagesElement() {
+    return this.tableContainer.querySelector(".table__pages")!;
+  },
+  get buttonPrev() {
+    return this.tableContainer.querySelector(".table__prev")!;
+  },
+  get buttonNext() {
+    return this.tableContainer.querySelector(".table__next")!;
+  },
+
+  init() {
+    userList.buttonPrev.addEventListener("click", () => {
+      if (userList.skip - userList.take < 0) {
+        return;
+      }
+      userList.skip -= userList.take;
+      userList.loadTable();
+    });
+    userList.buttonNext.addEventListener("click", () => {
+      userList.skip += userList.take;
+      userList.loadTable();
+    });
+
+    this.loadTable();
+  },
+
+  async loadTable() {
+    const response = await api.request("GET", `/user/range?skip=${userList.skip}&take=${userList.take}`);
+    const json = await response.json();
+    const users = json.data.users as User[];
+    const userCount = json.data.count as number;
+    const tableElement = userList.tableContainer.querySelector("table")!;
+
+    userList.pagesElement.textContent = `${userList.skip} - ${Math.min(userList.skip + userList.take, userList.skip + userCount)} of ${userCount}`;
+
+    tableElement.innerHTML = `
       <tr>
-        <td>${user.id}</td>
-        <td>${user.name}</td>
-        <td>${user.hex_uid}</td>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Hex UID</th>
       </tr>
-    `).join("")}
-  `;
-}
-loadUserList(0, 5);
+      ${users.map(user => `
+        <tr>
+          <td>${user.id}</td>
+          <td>${user.name}</td>
+          <td>${user.hex_uid}</td>
+        </tr>
+      `).join("")}
+    `;
+  }
+};
 
-async function loadCheckList(skip: number, take: number) {
-  const response = await api.request("GET", `/check/range?skip=${skip}&take=${take}`);
-  const json = await response.json();
-  const checks = json.data as Check[];
-  
-  const tableContainer = document.getElementById("table-container__check")!;
-  const tableElement = tableContainer.querySelector("table")!;
+userList.init();
 
-  console.log("checks", checks);
+const checkList = {
+  tableContainer: document.getElementById("table-container__check")!,
+  skip: 0,
+  take: 5,
 
-  tableElement.innerHTML = `
-    <tr>
-      <th>ID</th>
-      <th>User name</th>
-      <th>Date & time</th>
-    </tr>
-    ${checks.map(check => `
+  get takeElement() {
+    return this.tableContainer.querySelector(".table__entries-per-page")!;
+  },
+  get pagesElement() {
+    return this.tableContainer.querySelector(".table__pages")!;
+  },
+  get buttonPrev() {
+    return this.tableContainer.querySelector(".table__prev")!;
+  },
+  get buttonNext() {
+    return this.tableContainer.querySelector(".table__next")!;
+  },
+
+  init() {
+    checkList.buttonPrev.addEventListener("click", () => {
+      if (checkList.skip - checkList.take < 0) {
+        return;
+      }
+      checkList.skip -= checkList.take;
+      checkList.loadTable();
+    });
+    checkList.buttonNext.addEventListener("click", () => {
+      checkList.skip += checkList.take;
+      checkList.loadTable();
+    });
+
+    this.loadTable();
+  },
+
+  async loadTable() {
+    const response = await api.request("GET", `/check/range?skip=${checkList.skip}&take=${checkList.take}`);
+    const json = await response.json();
+    const checks = json.data.checks as Check[];
+    const checkCount = json.data.count as number;
+    const tableElement = checkList.tableContainer.querySelector("table")!;
+
+    checkList.pagesElement.textContent = `${checkList.skip} - ${Math.min(checkList.skip + checkList.take, checkList.skip + checkCount)} of ${checkCount}`;
+
+    tableElement.innerHTML = `
       <tr>
-        <td>${check.id}</td>
-        <td>${check.user.name}</td>
-        <td>${check.date_time}</td>
+        <th>ID</th>
+        <th>User name</th>
+        <th>Date & Time</th>
       </tr>
-    `).join("")}
-  `;
-}
-loadCheckList(0, 5);
+      ${checks.map(check => `
+        <tr>
+          <td>${check.id}</td>
+          <td>${check.user.name}</td>
+          <td>${check.date_time}</td>
+        </tr>
+      `).join("")}
+    `;
+  }
+};
+
+checkList.init();
 
 function createToast(ok: boolean, message: string, statusCode: number) {
   const toast = document.createElement("div");

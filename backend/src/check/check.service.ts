@@ -41,6 +41,10 @@ export class CheckService {
     });
   }
 
+  count() {
+    return this.checkRepository.count();
+  }
+
   update(id: number, updateCheckDto: UpdateCheckDto) {
     return this.checkRepository.update(id, updateCheckDto);
   }

@@ -9,6 +9,7 @@ export declare class CheckService {
     findAll(): Promise<Check[]>;
     findRange(skip: number, take: number): Promise<Check[]>;
     findOne(id: number): Promise<Check>;
+    count(): Promise<number>;
     update(id: number, updateCheckDto: UpdateCheckDto): Promise<import("typeorm").UpdateResult>;
     remove(id: number): Promise<import("typeorm").DeleteResult>;
 }
