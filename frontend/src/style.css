@@ -1,10 +1,20 @@
 * {
-  /* margin: 0;
-  padding: 0; */
+  margin: 0;
+  padding: 0;
+}
+
+select, button {
+  padding: 0.25rem 0.5rem;
+  background-color: transparent;
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
+  font-family: Courier;
+  cursor: pointer;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 50vh;
 }
 
 #app {
@@ -13,7 +23,7 @@ body {
 }
 
 h1 {
-  margin-left: 1rem;
+  margin: 2rem auto 2rem 1rem;
 }
 
 #form-container {
@@ -23,7 +33,13 @@ h1 {
 }
 
 fieldset {
+  padding: 0 0.75rem 0.75rem 0.75rem;
   border-radius: 8px;
+  border-color: #2099ff;
+}
+
+fieldset legend {
+  margin-left: 0.75rem;
 }
 
 fieldset div {
@@ -34,69 +50,126 @@ fieldset div {
   font-size: 0.8rem;
 }
 
+#toast-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
 .toast {
-  height: 6rem;
+  width: 28rem;
+  height: 4rem;
   background-color: #f8f8f8;
   border: 1px solid #e8e8e8;
   border-radius: 0.5rem;
   filter: drop-shadow(0 0.5rem 0.5rem #00000020);
-  /* var(--toast-color) */
-  color: #000000;
-  position: fixed;
-  top: 0.75rem;
-  right: 0.75rem;
   overflow: hidden;
   display: flex;
   justify-content: center;
+  animation: toast 5s forwards;
+}
+
+@keyframes toast {
+  0%, 100% {
+
+  }
+  10%, 90% {
+
+  }
 }
 
 .toast__bar {
-  width: 12px;
+  width: 8px;
   background-color: var(--toast-color);
 }
 
 .toast__svg-container {
   /* svg parent div */
-  margin: 0 1rem;
+  margin: 0 0.75rem;
   display: grid;
   place-items: center;  /* this took me 25 minutes to figure out */
 }
 
+.toast__text {
+  padding: 1rem 0;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.toast__text p:last-of-type {
+  font-size: 80%;
+}
+
 .toast__close {
-  margin: 0.25rem 0.25rem 0.25rem 1.5rem;
+  margin: 0.5rem 0.5rem 0.25rem 1.5rem;
   cursor: pointer;
 }
 
-section {
-  margin-top: 2.5rem;
+.table-container {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  font-family: monospace;
+  font-size: 120%;
   display: flex;
   flex-direction: column;
 }
 
+.table__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.25rem;
+}
+
+.table__header > div {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.table__header button {
+  height: 1.75rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 table {
-  font-family: 'Courier New', Courier, monospace;
-  border: 1px solid #000000;
   border-collapse: collapse;
 }
 
-table tr:first-of-type {
-  font-weight: bold;
+table th {
+  text-align: left;
 }
 
-table td {
-  border: 1px solid #000000;
+table tr:nth-child(even) {
+  background-color: #f4f4f4;
+}
+
+table tr:hover {
+  background-color: #f0f0f0;
+}
+
+table td, table th {
   padding: 0.25rem 0.5rem;
   white-space: nowrap;
 }
 
 table td:nth-of-type(1) {
-  width: 6ch;
+  width: 8ch;
 }
 
 table td:nth-of-type(2) {
-  width: auto;
+  width: 32ch;
 }
 
-table td:nth-of-type(3) {
-  width: 16ch;
+table td:nth-of-type(4) {
+  width: 0; /* minimum size */
 }

@@ -30,7 +30,7 @@ async function bootstrap() {
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("Not allowed by CORS: " + origin));
       }
     },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
