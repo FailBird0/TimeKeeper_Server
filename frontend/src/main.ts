@@ -218,10 +218,10 @@ class TableList {
   private entityCount = 0;
 
   private endpoint;
-
   private listedParams;
+  private form;
 
-  constructor(tableContainer: HTMLElement, endpoint: string, listedParams: {heading: string, getValue: (entity: any) => any}[]) {
+  constructor(tableContainer: HTMLElement, endpoint: string, listedParams: {heading: string, getValue: (entity: any) => any}[], form: any) {
     this.tableContainer = tableContainer;
     this.takeElement = this.tableContainer.querySelector(".table__entries-per-page") as HTMLSelectElement;
     this.pagesElement = this.tableContainer.querySelector(".table__pages")!;
@@ -232,8 +232,8 @@ class TableList {
     this.buttonRefresh = this.tableContainer.querySelector(".table__refresh")!;
 
     this.endpoint = endpoint;
-
     this.listedParams = listedParams;
+    this.form = form;
 
     this.takeElement.addEventListener("change", () => {
       this.take = parseInt(this.takeElement.value);
@@ -288,11 +288,13 @@ class TableList {
     for (const entity of entityList) {
       const rowDTs = this.listedParams.map((pSet) => `<td>${pSet.getValue(entity)}</td>`).join("");
 
-      const entityHTML = `
+      const editButton = `<button data-edit="${entity.id}">Edit</button>`;
+
+      const entityHTML = /* html */`
         <tr>
           ${rowDTs}
           <td>
-            <button data-edit="${entity.id}">Edit</button>
+            ${this.form ? editButton : ""}
             <button data-delete="${entity.id}">Delete</button>
           </td>
         </tr>
@@ -301,17 +303,20 @@ class TableList {
       tableElement.innerHTML += entityHTML;
     }
 
-    const editButtons = Array.from(tableElement.querySelectorAll("[data-edit]")) as HTMLButtonElement[];
-
-    for (const button of editButtons) {
-      button.addEventListener("click", () => {
-        const entity = entityList.find((e) => e.id == +button.dataset.edit!);
-
-        if (entity) {
-          userForm.doUpdate(entity);
-        }
-      });
+    if (this.form) {
+      const editButtons = Array.from(tableElement.querySelectorAll("[data-edit]")) as HTMLButtonElement[];
+  
+      for (const button of editButtons) {
+        button.addEventListener("click", () => {
+          const entity = entityList.find((e) => e.id == +button.dataset.edit!);
+  
+          if (entity) {
+            this.form.doUpdate(entity);
+          }
+        });
+      }
     }
+
 
     const deleteButtons = Array.from(tableElement.querySelectorAll("[data-delete]")) as HTMLButtonElement[];
 
@@ -335,7 +340,8 @@ const userList = new TableList(
     {heading: "ID", getValue: (e) => e.id},
     {heading: "Name", getValue: (e) => e.name},
     {heading: "Hex UID", getValue: (e) => e.hex_uid}
-  ]
+  ],
+  UserForm
 );
 
 const checkList = new TableList(
@@ -345,7 +351,8 @@ const checkList = new TableList(
     {heading: "ID", getValue: (e) => e.id},
     {heading: "User", getValue: (e) => {return `${e.user.name} (${e.user.id})`}},
     {heading: "Date & Time", getValue: (e) => { return new Date(e.date_time).toLocaleString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }) }}
-  ]
+  ],
+  null
 );
 
 function createToast(ok: boolean, message: string, statusCode: number) {
