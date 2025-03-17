@@ -203,106 +203,112 @@ const checkForm = new CheckForm(
   document.getElementById("form__check__update") as HTMLFormElement
 );
 
-const userList = {
-  tableContainer: document.getElementById("table-container__user")!,
-  skip: 0,
-  take: 5,
-  userCount: 0,
+class TableList {
+  private tableContainer;
+  private takeElement;
+  private pagesElement;
+  private buttonFirst;
+  private buttonPrev;
+  private buttonNext;
+  private buttonLast;
+  private buttonRefresh;
 
-  get takeElement() {
-    return this.tableContainer.querySelector(".table__entries-per-page") as HTMLSelectElement;
-  },
-  get pagesElement() {
-    return this.tableContainer.querySelector(".table__pages")!;
-  },
-  get buttonFirst() {
-    return this.tableContainer.querySelector(".table__first")!;
-  },
-  get buttonPrev() {
-    return this.tableContainer.querySelector(".table__prev")!;
-  },
-  get buttonNext() {
-    return this.tableContainer.querySelector(".table__next")!;
-  },
-  get buttonLast() {
-    return this.tableContainer.querySelector(".table__last")!;
-  },
-  get buttonRefresh() {
-    return this.tableContainer.querySelector(".table__refresh")!;
-  },
+  private skip = 0;
+  private take = 5;
+  private entityCount = 0;
 
-  init() {
+  private endpoint;
+
+  private listedParams;
+
+  constructor(tableContainer: HTMLElement, endpoint: string, listedParams: {heading: string, getValue: (entity: any) => any}[]) {
+    this.tableContainer = tableContainer;
+    this.takeElement = this.tableContainer.querySelector(".table__entries-per-page") as HTMLSelectElement;
+    this.pagesElement = this.tableContainer.querySelector(".table__pages")!;
+    this.buttonFirst = this.tableContainer.querySelector(".table__first")!;
+    this.buttonPrev = this.tableContainer.querySelector(".table__prev")!;
+    this.buttonNext = this.tableContainer.querySelector(".table__next")!;
+    this.buttonLast = this.tableContainer.querySelector(".table__last")!;
+    this.buttonRefresh = this.tableContainer.querySelector(".table__refresh")!;
+
+    this.endpoint = endpoint;
+
+    this.listedParams = listedParams;
+
     this.takeElement.addEventListener("change", () => {
-
-      userList.take = parseInt(this.takeElement.value);
-      userList.loadTable();
+      this.take = parseInt(this.takeElement.value);
+      this.loadTable();
     });
-    userList.buttonFirst.addEventListener("click", () => {
-      userList.skip = 0;
-      userList.loadTable();
+    this.buttonFirst.addEventListener("click", () => {
+      this.skip = 0;
+      this.loadTable();
     });
-    userList.buttonPrev.addEventListener("click", () => {
-      if (userList.skip - userList.take < 0) {
+    this.buttonPrev.addEventListener("click", () => {
+      if (this.skip - this.take < 0) {
         return;
       }
-      userList.skip -= userList.take;
-      userList.loadTable();
+      this.skip -= this.take;
+      this.loadTable();
     });
-    userList.buttonNext.addEventListener("click", () => {
-      if (userList.skip + userList.take > userList.userCount) {
+    this.buttonNext.addEventListener("click", () => {
+      if (this.skip + this.take > this.entityCount) {
         return;
       }
-      userList.skip += userList.take;
-      userList.loadTable();
+      this.skip += this.take;
+      this.loadTable();
     });
-    userList.buttonLast.addEventListener("click", () => {
-      userList.skip = Math.floor(userList.userCount / userList.take) * userList.take;
-      userList.loadTable();
+    this.buttonLast.addEventListener("click", () => {
+      this.skip = Math.floor(this.entityCount / this.take) * this.take;
+      this.loadTable();
     });
-    userList.buttonRefresh.addEventListener("click", () => {
-      userList.loadTable();
+    this.buttonRefresh.addEventListener("click", () => {
+      this.loadTable();
     });
 
     this.loadTable();
-  },
-
+  }
   async loadTable() {
-    const response = await api.request("GET", `/user/range?skip=${userList.skip}&take=${userList.take}`);
+    const response = await api.request("GET", `${this.endpoint}/range?skip=${this.skip}&take=${this.take}`);
     const json = await response.json();
-    const users = json.data.users as User[];
-    userList.userCount = json.data.count as number;
-    const tableElement = userList.tableContainer.querySelector("table")!;
+    const entityList = json.data.list as any[];
+    this.entityCount = json.data.count as number;
+    const tableElement = this.tableContainer.querySelector("table")!;
 
-    userList.pagesElement.textContent = `${userList.skip} - ${Math.min(userList.skip + userList.take, userList.userCount)} of ${userList.userCount}`;
+    this.pagesElement.textContent = `${this.skip} - ${Math.min(this.skip + this.take, this.entityCount)} of ${this.entityCount}`;
+
+    const rowTHs = this.listedParams.map(pSet => `<th>${pSet.heading}</th>`).join("");
 
     tableElement.innerHTML = /* html */`
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Hex UID</th>
+        ${rowTHs}
         <th></th>
       </tr>
-      ${users.map(user => /* html */`
+    `;
+
+    for (const entity of entityList) {
+      const rowDTs = this.listedParams.map((pSet) => `<td>${pSet.getValue(entity)}</td>`).join("");
+
+      const entityHTML = `
         <tr>
-          <td>${user.id}</td>
-          <td>${user.name}</td>
-          <td>${user.hex_uid}</td>
+          ${rowDTs}
           <td>
-            <button data-edit="${user.id}">Edit</button>
-            <button data-delete="${user.id}">Delete</button>
+            <button data-edit="${entity.id}">Edit</button>
+            <button data-delete="${entity.id}">Delete</button>
           </td>
         </tr>
-      `).join("")}
-    `;
+      `
+
+      tableElement.innerHTML += entityHTML;
+    }
 
     const editButtons = Array.from(tableElement.querySelectorAll("[data-edit]")) as HTMLButtonElement[];
 
     for (const button of editButtons) {
       button.addEventListener("click", () => {
-        const user = users.find((u) => u.id == +button.dataset.edit!);
+        const entity = entityList.find((e) => e.id == +button.dataset.edit!);
 
-        if (user) {
-          userForm.doUpdate(user);
+        if (entity) {
+          userForm.doUpdate(entity);
         }
       });
     }
@@ -313,148 +319,34 @@ const userList = {
       button.addEventListener("click", async () => {
         const id = +button.dataset.delete!
 
-        const response = await api.request("DELETE", `/user/${id}`);
+        const response = await api.request("DELETE", `${this.endpoint}/${id}`);
         const json = await response.json();
 
         createToast(json.success, json.message, response.status);
       });
     }
   }
-};
+}
 
-userList.init();
+const userList = new TableList(
+  document.getElementById("table-container__user")!,
+  "/user",
+  [
+    {heading: "ID", getValue: (e) => e.id},
+    {heading: "Name", getValue: (e) => e.name},
+    {heading: "Hex UID", getValue: (e) => e.hex_uid}
+  ]
+);
 
-const checkList = {
-  tableContainer: document.getElementById("table-container__check")!,
-  skip: 0,
-  take: 5,
-  checkCount: 0,
-
-  get takeElement() {
-    return this.tableContainer.querySelector(".table__entries-per-page") as HTMLSelectElement;
-  },
-  get pagesElement() {
-    return this.tableContainer.querySelector(".table__pages")!;
-  },
-  get buttonFirst() {
-    return this.tableContainer.querySelector(".table__first")!;
-  },
-  get buttonPrev() {
-    return this.tableContainer.querySelector(".table__prev")!;
-  },
-  get buttonNext() {
-    return this.tableContainer.querySelector(".table__next")!;
-  },
-  get buttonLast() {
-    return this.tableContainer.querySelector(".table__last")!;
-  },
-  get buttonRefresh() {
-    return this.tableContainer.querySelector(".table__refresh")!;
-  },
-
-  init() {
-    this.takeElement.addEventListener("change", () => {
-      checkList.take = parseInt(this.takeElement.value);
-      checkList.loadTable();
-    });
-    this.takeElement.value = this.take.toString();
-    checkList.buttonFirst.addEventListener("click", () => {
-      checkList.skip = 0;
-      checkList.loadTable();
-    });
-    checkList.buttonPrev.addEventListener("click", () => {
-      if (checkList.skip - checkList.take < 0) {
-        return;
-      }
-      checkList.skip -= checkList.take;
-      checkList.loadTable();
-    });
-    checkList.buttonNext.addEventListener("click", () => {
-      if (checkList.skip + checkList.take > checkList.checkCount) {
-        return;
-      }
-      checkList.skip += checkList.take;
-      checkList.loadTable();
-    });
-    checkList.buttonLast.addEventListener("click", () => {
-      checkList.skip = Math.floor(checkList.checkCount / checkList.take) * checkList.take;
-      checkList.loadTable();
-    });
-    checkList.buttonRefresh.addEventListener("click", () => {
-      checkList.loadTable();
-    });
-
-    this.loadTable();
-  },
-
-  async loadTable() {
-    const response = await api.request("GET", `/check/range?skip=${checkList.skip}&take=${checkList.take}`);
-    const json = await response.json();
-    const checks = json.data.checks as Check[];
-    checkList.checkCount = json.data.count as number;
-    const tableElement = checkList.tableContainer.querySelector("table")!;
-
-    checkList.pagesElement.textContent = `${checkList.skip} - ${Math.min(checkList.skip + checkList.take, checkList.checkCount)} of ${checkList.checkCount}`;
-
-    function formatDate(date: Date) {
-      return new Intl.DateTimeFormat("de-DE", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZone: "Europe/Berlin"
-      }).format(date);
-    }
-
-    tableElement.innerHTML = /* html */`
-      <tr>
-        <th>ID</th>
-        <th>User</th>
-        <th>Date & Time</th>
-      </tr>
-      ${checks.map(check => /* html */`
-        <tr>
-          <td>${check.id}</td>
-          <td>${check.user.name} (${check.user.id})</td>
-          <td>${formatDate(new Date(check.date_time))}</td>
-          <td>
-            <!-- <button data-edit="${check.id}">Edit</button> -->
-            <button data-delete="${check.id}">Delete</button>
-          </td>
-        </tr>
-      `).join("")}
-    `;
-
-    // const editButtons = Array.from(tableElement.querySelectorAll("[data-edit]")) as HTMLButtonElement[];
-
-    // for (const button of editButtons) {
-    //   button.addEventListener("click", () => {
-    //     const check = checks.find((c) => c.id == +button.dataset.edit!);
-
-    //     if (check) {
-    //       checkForm.doUpdate(check);
-    //     }
-    //   });
-    // }
-
-    const deleteButtons = Array.from(tableElement.querySelectorAll("[data-delete]")) as HTMLButtonElement[];
-
-    for (const button of deleteButtons) {
-      button.addEventListener("click", async () => {
-        const id = +button.dataset.delete!
-
-        const response = await api.request("DELETE", `/check/${id}`);
-        const json = await response.json();
-
-        createToast(json.success, json.message, response.status);
-      });
-    }
-  }
-};
-
-checkList.init();
+const checkList = new TableList(
+  document.getElementById("table-container__check")!,
+  "/check",
+  [
+    {heading: "ID", getValue: (e) => e.id},
+    {heading: "User", getValue: (e) => {return `${e.user.name} (${e.user.id})`}},
+    {heading: "Date & Time", getValue: (e) => { return new Date(e.date_time).toLocaleString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }) }}
+  ]
+);
 
 function createToast(ok: boolean, message: string, statusCode: number) {
   const toast = document.createElement("div");

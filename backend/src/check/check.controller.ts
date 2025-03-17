@@ -69,7 +69,7 @@ export class CheckController {
       success: true,
       message: "Checks found successfully",
       data: {
-        checks,
+        list: checks,
         count
       }
     };

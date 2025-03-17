@@ -45,7 +45,7 @@ export class UserController {
       success: true,
       message: "Users found successfully",
       data: {
-        users,
+        list: users,
         count
       }
     };
