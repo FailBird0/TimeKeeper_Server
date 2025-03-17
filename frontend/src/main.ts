@@ -337,7 +337,7 @@ const userList = new TableList(
   document.getElementById("table-container__user")!,
   "/user",
   [
-    {heading: "ID", getValue: (e) => e.id},
+    {heading: "ID", getValue: (e) => `#${e.id}`},
     {heading: "Name", getValue: (e) => e.name},
     {heading: "Hex UID", getValue: (e) => e.hex_uid}
   ],
@@ -348,8 +348,8 @@ const checkList = new TableList(
   document.getElementById("table-container__check")!,
   "/check",
   [
-    {heading: "ID", getValue: (e) => e.id},
-    {heading: "User", getValue: (e) => {return `${e.user.name} (${e.user.id})`}},
+    {heading: "ID", getValue: (e) => `#${e.id}`},
+    {heading: "User", getValue: (e) => `${e.user.name} (${e.user.id})`},
     {heading: "Date & Time", getValue: (e) => { return new Date(e.date_time).toLocaleString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" }) }}
   ],
   null
