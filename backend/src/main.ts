@@ -17,7 +17,7 @@ async function bootstrap() {
     origin: (origin, callback) => {
       const allowedOrigins = [
         "https://localhost:5173", // from the hosting device
-        /https:\/\/192\.168\.\d+\.\d+:\d+/ // from the local network
+        /(https:\/\/)?192\.168\.\d+\.\d+/ // from the local network
       ];
 
       const isAllowed = allowedOrigins.some((allowedOrigin) => {
