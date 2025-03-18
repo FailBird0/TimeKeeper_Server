@@ -26,11 +26,14 @@ export class CheckService {
     });
   }
 
-  findRange(skip: number, take: number) {
+  findRange(skip: number, take: number, order: "ASC" | "DESC") {
     return this.checkRepository.find({
       skip,
       take,
-      relations: ["user"]
+      relations: ["user"],
+      order: {
+        id: order
+      }
     });
   }
 

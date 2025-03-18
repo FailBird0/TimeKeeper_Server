@@ -27,10 +27,13 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findRange(skip: number, take: number) {
+  findRange(skip: number, take: number, order: "ASC" | "DESC") {
     return this.userRepository.find({
       skip,
-      take
+      take,
+      order: {
+        id: order
+      }
     });
   }
 

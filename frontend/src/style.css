@@ -156,6 +156,21 @@ table th {
   text-align: left;
 }
 
+.table__th-filterable {
+  cursor: pointer;
+  position: relative;
+}
+
+.table__th-filterable::after {
+  content: "▲";
+  position: absolute;
+  right: 1rem;
+}
+
+.table-container.DESC .table__th-filterable::after {
+  rotate: 180deg;
+}
+
 table tr:nth-child(even) {
   background-color: #f4f4f4;
 }

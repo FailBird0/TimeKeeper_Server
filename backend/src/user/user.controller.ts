@@ -36,9 +36,10 @@ export class UserController {
   @Get('range')
   async findRange(
     @Query('skip') skip: number,
-    @Query('take') take: number
+    @Query('take') take: number,
+    @Query('order') order: "ASC" | "DESC"
   ) {
-    const users = await this.userService.findRange(skip, take);
+    const users = await this.userService.findRange(skip, take, order);
     const count = await this.userService.count();
 
     return {

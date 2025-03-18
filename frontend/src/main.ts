@@ -218,6 +218,8 @@ class TableList {
   private entityList: any[] = [];
   private totalEntityCount = 0;
 
+  private filter: "ASC" | "DESC" = "ASC";
+
   private endpoint;
   private listedParams;
   private form;
@@ -269,7 +271,7 @@ class TableList {
     this.loadTable();
   }
   async loadTable() {
-    const response = await api.request("GET", `${this.endpoint}/range?skip=${this.skip}&take=${this.take}`);
+    const response = await api.request("GET", `${this.endpoint}/range?skip=${this.skip}&take=${this.take}&order=${this.filter}`);
     const json = await response.json();
     this.entityList = json.data.list as any[];
     this.totalEntityCount = json.data.count as number;
@@ -303,6 +305,20 @@ class TableList {
 
       tableElement.innerHTML += entityHTML;
     }
+
+    const firstTH = tableElement.querySelector("th")!;
+    firstTH.classList.add("table__th-filterable");
+    firstTH.addEventListener("click", () => {
+      if (this.filter == "ASC") {
+        this.filter = "DESC";
+        this.tableContainer.classList.add("DESC");
+      } else {
+        this.filter = "ASC";
+        this.tableContainer.classList.remove("DESC");
+      }
+
+      this.loadTable();
+    });
 
     if (this.form) {
       const editButtons = Array.from(tableElement.querySelectorAll("[data-edit]")) as HTMLButtonElement[];

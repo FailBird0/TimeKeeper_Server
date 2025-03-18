@@ -60,9 +60,10 @@ export class CheckController {
   @Get('range')
   async findRange(
     @Query('skip') skip: number,
-    @Query('take') take: number
+    @Query('take') take: number,
+    @Query('order') order: "ASC" | "DESC"
   ) {
-    const checks = await this.checkService.findRange(skip, take);
+    const checks = await this.checkService.findRange(skip, take, order);
     const count = await this.checkService.count();
 
     return {
