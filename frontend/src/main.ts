@@ -215,7 +215,8 @@ class TableList {
 
   private skip = 0;
   private take = 5;
-  private entityCount = 0;
+  private entityList: any[] = [];
+  private totalEntityCount = 0;
 
   private endpoint;
   private listedParams;
@@ -251,14 +252,14 @@ class TableList {
       this.loadTable();
     });
     this.buttonNext.addEventListener("click", () => {
-      if (this.skip + this.take > this.entityCount) {
+      if (this.skip + this.take > this.totalEntityCount) {
         return;
       }
       this.skip += this.take;
       this.loadTable();
     });
     this.buttonLast.addEventListener("click", () => {
-      this.skip = Math.floor(this.entityCount / this.take) * this.take;
+      this.skip = Math.floor(this.totalEntityCount / this.take) * this.take;
       this.loadTable();
     });
     this.buttonRefresh.addEventListener("click", () => {
@@ -270,11 +271,11 @@ class TableList {
   async loadTable() {
     const response = await api.request("GET", `${this.endpoint}/range?skip=${this.skip}&take=${this.take}`);
     const json = await response.json();
-    const entityList = json.data.list as any[];
-    this.entityCount = json.data.count as number;
+    this.entityList = json.data.list as any[];
+    this.totalEntityCount = json.data.count as number;
     const tableElement = this.tableContainer.querySelector("table")!;
 
-    this.pagesElement.textContent = `${this.skip} - ${Math.min(this.skip + this.take, this.entityCount)} of ${this.entityCount}`;
+    this.pagesElement.textContent = `${this.skip} - ${Math.min(this.skip + this.take, this.totalEntityCount)} of ${this.totalEntityCount}`;
 
     const rowTHs = this.listedParams.map(pSet => `<th>${pSet.heading}</th>`).join("");
 
@@ -285,7 +286,7 @@ class TableList {
       </tr>
     `;
 
-    for (const entity of entityList) {
+    for (const entity of this.entityList) {
       const rowDTs = this.listedParams.map((pSet) => `<td>${pSet.getValue(entity)}</td>`).join("");
 
       const editButton = `<button data-edit="${entity.id}">Edit</button>`;
@@ -308,7 +309,7 @@ class TableList {
   
       for (const button of editButtons) {
         button.addEventListener("click", () => {
-          const entity = entityList.find((e) => e.id == +button.dataset.edit!);
+          const entity = this.entityList.find((e) => e.id == +button.dataset.edit!);
   
           if (entity) {
             this.form.doUpdate(entity);

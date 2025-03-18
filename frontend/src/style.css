@@ -22,6 +22,7 @@ body {
 
 #app {
   margin: 0 auto;
+  padding: 0 2rem;
   max-width: 800px;
 }
 
@@ -126,6 +127,10 @@ fieldset div {
   padding: 0.5rem 0.25rem;
 }
 
+.table__title {
+  font-weight: bold;
+}
+
 .table__header > div {
   display: flex;
   gap: 0.5rem;
@@ -174,4 +179,25 @@ table td:nth-of-type(2) {
 
 table td:nth-of-type(4) {
   width: 0; /* minimum size */
+}
+
+@media screen and (max-width: 800px) {
+  #form-container {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+  }
+  .table__header {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+  }
+  .table__header > div {
+    align-self: flex-end;
+  }
+
+  .table-container {
+    font-size: 80%;
+  }
 }
