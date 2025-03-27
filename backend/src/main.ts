@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import * as fs from 'fs';
 
 async function bootstrap() {
+  /* 
+    -> https too complex to use just yet, running http instead
   const httpsOptions = {
     key: fs.readFileSync(process.env.SSL_KEY),
     cert: fs.readFileSync(process.env.SSL_CERT),
@@ -12,12 +14,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions
   });
+  */
+
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "https://localhost:5173", // from the hosting device
-        /(https:\/\/)?192\.168\.\d+\.\d+/ // from the local network
+        "http://localhost:5173", // from the hosting device
+        /(http:\/\/)?192\.168\.\d+\.\d+/ // from the local network
       ];
 
       const isAllowed = allowedOrigins.some((allowedOrigin) => {
