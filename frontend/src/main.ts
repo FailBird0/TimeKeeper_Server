@@ -254,7 +254,7 @@ class TableList {
       this.loadTable();
     });
     this.buttonNext.addEventListener("click", () => {
-      if (this.skip + this.take > this.totalEntityCount) {
+      if (this.skip + this.take >= this.totalEntityCount) {
         return;
       }
       this.skip += this.take;
